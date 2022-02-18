@@ -19,3 +19,13 @@ Four In a Row is a game that inolves 2 users, 2 human players or 1 human player 
 - HTML
 - CSS
 - Vanilla JS
+
+## MVP
+- Get the boardgame structured correctly so it will be able to handle the display of the tokens.
+- Ensure the tokens fall into the right circle that is clicked.
+- Alternate turns between players and maintain whose turn it is 
+- Calculate the winner or tie by designing the logic
+
+
+## Stretch Plan
+- Add an option to choose between either multiplayer or computer
