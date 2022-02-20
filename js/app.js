@@ -1,7 +1,7 @@
 console.log('Linked.')
 
 const boardGame = document.getElementById('boardGame')
-//boardGame columns
+// BoardGame columns.
 const column1 = [0, 6, 12, 18, 24]
 const column2 = [1, 7, 13, 19, 25]
 const column3 = [2, 8, 14, 20, 26]
@@ -34,7 +34,7 @@ const player2 = {
     score: 0
 }
 
-// create the 30 Circle divs in div boardGame
+// Create the 30 Circle divs in div boardGame
 for(let i = 0; i < 30; i++)
 {
     const squareDiv = document.createElement('div')
@@ -44,84 +44,54 @@ for(let i = 0; i < 30; i++)
     boardGame.appendChild(squareDiv)
 }
 
-const play = (player1, player2, i, placeToken) => {
+// Drops token in the boardgame at the clicked column.
+const dropToken = (player1, player2, i, placeToken, column) => {
     if(i === 5)
     {
         clearInterval(placeToken)
     }
-    else if(i === 0 && document.getElementById(`${column1[i]}`).classList.contains('white') && !document.getElementById(`${column1[i]}`).classList.contains(player2.tokenColor))
+    else if(i === 0 && document.getElementById(`${column[i]}`).classList.contains('white') && !document.getElementById(`${column[i]}`).classList.contains(player2.tokenColor))
     {
-        document.getElementById(`${column1[i]}`).classList.remove('white')
-        document.getElementById(`${column1[i]}`).classList.add(player1.tokenColor)
-        // i++
+        document.getElementById(`${column[i]}`).classList.remove('white')
+        document.getElementById(`${column[i]}`).classList.add(player1.tokenColor)
     }
-    else if(document.getElementById(`${column1[i]}`).classList.contains('white') && !document.getElementById(`${column1[i]}`).classList.contains(player2.tokenColor))
+    else if(document.getElementById(`${column[i]}`).classList.contains('white') && !document.getElementById(`${column[i]}`).classList.contains(player2.tokenColor))
     {
-        document.getElementById(`${column1[i - 1]}`).classList.remove(player1.tokenColor)
-        document.getElementById(`${column1[i - 1]}`).classList.add('white')
+        document.getElementById(`${column[i - 1]}`).classList.remove(player1.tokenColor)
+        document.getElementById(`${column[i - 1]}`).classList.add('white')
 
-        document.getElementById(`${column1[i]}`).classList.remove('white')
-        document.getElementById(`${column1[i]}`).classList.add(player1.tokenColor)
-        // i++
+        document.getElementById(`${column[i]}`).classList.remove('white')
+        document.getElementById(`${column[i]}`).classList.add(player1.tokenColor)
     }
 }
+
+// Place token function
+// const placeToken = (counter) => {
+//     const placeToken = setInterval( () => {
+//         dropToken(player1, player2, i, placeToken)
+//         i++
+//     }, 400)
+// }
 
 //FIRST COLUMN EVENT LISTENER
 document.getElementById('0').addEventListener('click', () => {
     let i = 0
     if(player1.isTurn)
     {
-        const placeToken = setInterval( 
-            () => {
-            // if(i === 5)
-            // {
-            //     clearInterval(placeToken)
-            // }
-            // else if(i === 0 && document.getElementById(`${column1[i]}`).classList.contains('white') && !document.getElementById(`${column1[i]}`).classList.contains('yellow'))
-            // {
-            //     document.getElementById(`${column1[i]}`).classList.remove('white')
-            //     document.getElementById(`${column1[i]}`).classList.add('red')
-            //     i++
-            // }
-            // else if(document.getElementById(`${column1[i]}`).classList.contains('white') && !document.getElementById(`${column1[i]}`).classList.contains('yellow'))
-            // {
-            //     document.getElementById(`${column1[i - 1]}`).classList.remove('red')
-            //     document.getElementById(`${column1[i - 1]}`).classList.add('white')
-
-            //     document.getElementById(`${column1[i]}`).classList.remove('white')
-            //     document.getElementById(`${column1[i]}`).classList.add('red')
-            //     i++
-            // }
-            play(player1, player2, i, placeToken)
+        // Will drop the token every 4 seconds until its reaches its optimal position.
+        const placeToken = setInterval( () => {
+            dropToken(player1, player2, i, placeToken, column1)
             i++
-        }
-         ,400)
+        }, 400)
         player1.isTurn = false
         player2.isTurn = true
     }
     else if(player2.isTurn) 
     {
         const placeToken = setInterval( () => {
-            if(i === 5)
-            {
-                clearInterval(placeToken)
-            }
-            else if(i === 0 && document.getElementById(`${column1[i]}`).classList.contains('white') && !document.getElementById(`${column1[i]}`).classList.contains('red'))
-            {
-                document.getElementById(`${column1[i]}`).classList.remove('white')
-                document.getElementById(`${column1[i]}`).classList.add('yellow')
-                i++
-            }
-            else if(document.getElementById(`${column1[i]}`).classList.contains('white') && !document.getElementById(`${column1[i]}`).classList.contains('red'))
-            {
-                document.getElementById(`${column1[i - 1]}`).classList.remove('yellow')
-                document.getElementById(`${column1[i - 1]}`).classList.add('white')
-
-                document.getElementById(`${column1[i]}`).classList.remove('white')
-                document.getElementById(`${column1[i]}`).classList.add('yellow')
-                i++
-            }
-        },400)
+            dropToken(player2, player1, i, placeToken, column1)
+            i++ 
+        }, 400)
         player2.isTurn = false
         player1.isTurn = true
     }
@@ -132,54 +102,18 @@ document.getElementById('1').addEventListener('click', () => {
     let i = 0
     if(player1.isTurn)
     {
-        const placeToken = setInterval( 
-            () => {
-            if(i === 5)
-            {
-                clearInterval(placeToken)
-            }
-            else if(i === 0 && document.getElementById(`${column2[i]}`).classList.contains('white') && !document.getElementById(`${column2[i]}`).classList.contains('yellow'))
-            {
-                document.getElementById(`${column2[i]}`).classList.remove('white')
-                document.getElementById(`${column2[i]}`).classList.add('red')
-                i++
-            }
-            else if(document.getElementById(`${column2[i]}`).classList.contains('white') && !document.getElementById(`${column2[i]}`).classList.contains('yellow'))
-            {
-                document.getElementById(`${column2[i - 1]}`).classList.remove('red')
-                document.getElementById(`${column2[i - 1]}`).classList.add('white')
-
-                document.getElementById(`${column2[i]}`).classList.remove('white')
-                document.getElementById(`${column2[i]}`).classList.add('red')
-                i++
-            }
-        }
-         ,400)
+        const placeToken = setInterval( () => {
+            dropToken(player1, player2, i, placeToken, column2)
+            i++
+        }, 400)
         player1.isTurn = false
         player2.isTurn = true
     }
     else if(player2.isTurn) 
     {
         const placeToken = setInterval( () => {
-            if(i === 5)
-            {
-                clearInterval(placeToken)
-            }
-            else if(i === 0 && document.getElementById(`${column2[i]}`).classList.contains('white') && !document.getElementById(`${column2[i]}`).classList.contains('red'))
-            {
-                document.getElementById(`${column2[i]}`).classList.remove('white')
-                document.getElementById(`${column2[i]}`).classList.add('yellow')
-                i++
-            }
-            else if(document.getElementById(`${column2[i]}`).classList.contains('white') && !document.getElementById(`${column2[i]}`).classList.contains('red'))
-            {
-                document.getElementById(`${column2[i - 1]}`).classList.remove('yellow')
-                document.getElementById(`${column2[i - 1]}`).classList.add('white')
-
-                document.getElementById(`${column2[i]}`).classList.remove('white')
-                document.getElementById(`${column2[i]}`).classList.add('yellow')
-                i++
-            }
+            dropToken(player2, player1, i, placeToken, column2)
+            i++ 
         },400)
         player2.isTurn = false
         player1.isTurn = true
@@ -191,55 +125,19 @@ document.getElementById('2').addEventListener('click', () => {
     let i = 0
     if(player1.isTurn)
     {
-        const placeToken = setInterval( 
-            () => {
-            if(i === 5)
-            {
-                clearInterval(placeToken)
-            }
-            else if(i === 0 && document.getElementById(`${column3[i]}`).classList.contains('white') && !document.getElementById(`${column3[i]}`).classList.contains('yellow'))
-            {
-                document.getElementById(`${column3[i]}`).classList.remove('white')
-                document.getElementById(`${column3[i]}`).classList.add('red')
-                i++
-            }
-            else if(document.getElementById(`${column3[i]}`).classList.contains('white') && !document.getElementById(`${column3[i]}`).classList.contains('yellow'))
-            {
-                document.getElementById(`${column3[i - 1]}`).classList.remove('red')
-                document.getElementById(`${column3[i - 1]}`).classList.add('white')
-
-                document.getElementById(`${column3[i]}`).classList.remove('white')
-                document.getElementById(`${column3[i]}`).classList.add('red')
-                i++
-            }
-        }
-         ,400)
+        const placeToken = setInterval( () => {
+            dropToken(player1, player2, i, placeToken, column3)
+            i++
+        }, 400)
         player1.isTurn = false
         player2.isTurn = true
     }
     else if(player2.isTurn) 
     {
         const placeToken = setInterval( () => {
-            if(i === 5)
-            {
-                clearInterval(placeToken)
-            }
-            else if(i === 0 && document.getElementById(`${column3[i]}`).classList.contains('white') && !document.getElementById(`${column3[i]}`).classList.contains('red'))
-            {
-                document.getElementById(`${column3[i]}`).classList.remove('white')
-                document.getElementById(`${column3[i]}`).classList.add('yellow')
-                i++
-            }
-            else if(document.getElementById(`${column3[i]}`).classList.contains('white') && !document.getElementById(`${column3[i]}`).classList.contains('red'))
-            {
-                document.getElementById(`${column3[i - 1]}`).classList.remove('yellow')
-                document.getElementById(`${column3[i - 1]}`).classList.add('white')
-
-                document.getElementById(`${column3[i]}`).classList.remove('white')
-                document.getElementById(`${column3[i]}`).classList.add('yellow')
-                i++
-            }
-        },400)
+            dropToken(player2, player1, i, placeToken, column3)
+            i++
+        }, 400)
         player2.isTurn = false
         player1.isTurn = true
     }
@@ -250,55 +148,65 @@ document.getElementById('3').addEventListener('click', () => {
     let i = 0
     if(player1.isTurn)
     {
-        const placeToken = setInterval( 
-            () => {
-            if(i === 5)
-            {
-                clearInterval(placeToken)
-            }
-            else if(i === 0 && document.getElementById(`${column4[i]}`).classList.contains('white') && !document.getElementById(`${column4[i]}`).classList.contains('yellow'))
-            {
-                document.getElementById(`${column4[i]}`).classList.remove('white')
-                document.getElementById(`${column4[i]}`).classList.add('red')
-                i++
-            }
-            else if(document.getElementById(`${column4[i]}`).classList.contains('white') && !document.getElementById(`${column4[i]}`).classList.contains('yellow'))
-            {
-                document.getElementById(`${column4[i - 1]}`).classList.remove('red')
-                document.getElementById(`${column4[i - 1]}`).classList.add('white')
-
-                document.getElementById(`${column4[i]}`).classList.remove('white')
-                document.getElementById(`${column4[i]}`).classList.add('red')
-                i++
-            }
-        }
-         ,400)
+        const placeToken = setInterval( () => {
+            dropToken(player1, player2, i, placeToken, column4)
+            i++
+        }, 400)
         player1.isTurn = false
         player2.isTurn = true
     }
     else if(player2.isTurn) 
     {
         const placeToken = setInterval( () => {
-            if(i === 5)
-            {
-                clearInterval(placeToken)
-            }
-            else if(i === 0 && document.getElementById(`${column4[i]}`).classList.contains('white') && !document.getElementById(`${column4[i]}`).classList.contains('red'))
-            {
-                document.getElementById(`${column4[i]}`).classList.remove('white')
-                document.getElementById(`${column4[i]}`).classList.add('yellow')
-                i++
-            }
-            else if(document.getElementById(`${column4[i]}`).classList.contains('white') && !document.getElementById(`${column4[i]}`).classList.contains('red'))
-            {
-                document.getElementById(`${column4[i - 1]}`).classList.remove('yellow')
-                document.getElementById(`${column4[i - 1]}`).classList.add('white')
+            dropToken(player2, player1, i, placeToken, column4)
+            i++    
+        }, 400)
+        player2.isTurn = false
+        player1.isTurn = true
+    }
+})
 
-                document.getElementById(`${column4[i]}`).classList.remove('white')
-                document.getElementById(`${column4[i]}`).classList.add('yellow')
-                i++
-            }
-        },400)
+//FIFTH COLUMN EVENT LISTENER
+document.getElementById('4').addEventListener('click', () => {
+    let i = 0
+    if(player1.isTurn)
+    {
+        const placeToken = setInterval( () => {
+            dropToken(player1, player2, i, placeToken, column5)
+            i++
+        }, 400)
+        player1.isTurn = false
+        player2.isTurn = true
+    }
+    else if(player2.isTurn) 
+    {
+        const placeToken = setInterval( () => {
+            dropToken(player2, player1, i, placeToken, column5)
+            i++    
+        }, 400)
+        player2.isTurn = false
+        player1.isTurn = true
+    }
+})
+
+//SIX COLUMN EVENT LISTENER
+document.getElementById('5').addEventListener('click', () => {
+    let i = 0
+    if(player1.isTurn)
+    {
+        const placeToken = setInterval( () => {
+            dropToken(player1, player2, i, placeToken, column6)
+            i++
+        }, 400)
+        player1.isTurn = false
+        player2.isTurn = true
+    }
+    else if(player2.isTurn) 
+    {
+        const placeToken = setInterval( () => {
+            dropToken(player2, player1, i, placeToken, column6)
+            i++    
+        }, 400)
         player2.isTurn = false
         player1.isTurn = true
     }
