@@ -34,6 +34,23 @@ const player2 = {
     score: 0
 }
 
+const checkWinner = (winningCombinations) => {
+    for(let i = 0; i < winningCombinations.length; i++)
+    {
+        if(document.getElementById(`${winningCombinations[i][0]}`).classList.contains('red') 
+        && document.getElementById(`${winningCombinations[i][1]}`).classList.contains('red') 
+        && document.getElementById(`${winningCombinations[i][2]}`).classList.contains('red') 
+        && document.getElementById(`${winningCombinations[i][3]}`).classList.contains('red'))
+        {
+            console.log(document.getElementById(`${winningCombinations[i][0]}`))
+            console.log(document.getElementById(`${winningCombinations[i][1]}`))
+            console.log(document.getElementById(`${winningCombinations[i][2]}`))
+            console.log(document.getElementById(`${winningCombinations[i][3]}`))
+            return true
+        }
+    }
+}
+
 // Create the 30 Circle divs in div boardGame
 for(let i = 0; i < 30; i++)
 {
@@ -44,7 +61,7 @@ for(let i = 0; i < 30; i++)
     boardGame.appendChild(squareDiv)
 }
 
-// Drops token in the boardgame at the clicked column.
+// Drops token in the boardgame at the clicked column in the correct row.
 const dropToken = (player1, player2, i, placeToken, column) => {
     if(i === 5)
     {
@@ -65,22 +82,18 @@ const dropToken = (player1, player2, i, placeToken, column) => {
     }
 }
 
-// Place token function
-// const placeToken = (counter) => {
-//     const placeToken = setInterval( () => {
-//         dropToken(player1, player2, i, placeToken)
-//         i++
-//     }, 400)
-// }
+const removeListeners = () => {
 
-//FIRST COLUMN EVENT LISTENER
-document.getElementById('0').addEventListener('click', () => {
+}
+
+// Place token function
+const play = (column) => {
     let i = 0
     if(player1.isTurn)
     {
         // Will drop the token every 4 seconds until its reaches its optimal position.
         const placeToken = setInterval( () => {
-            dropToken(player1, player2, i, placeToken, column1)
+            dropToken(player1, player2, i, placeToken, column)
             i++
         }, 400)
         player1.isTurn = false
@@ -89,125 +102,32 @@ document.getElementById('0').addEventListener('click', () => {
     else if(player2.isTurn) 
     {
         const placeToken = setInterval( () => {
-            dropToken(player2, player1, i, placeToken, column1)
+            dropToken(player2, player1, i, placeToken, column)
             i++ 
         }, 400)
         player2.isTurn = false
         player1.isTurn = true
     }
-})
+    if(checkWinner(winningCombinations))
+    {
+        alert('Player 1 is the winner')
+    }
+}
+
+//FIRST COLUMN EVENT LISTENER
+document.getElementById('0').addEventListener('click', () => {play(column1)})
 
 //SECOND COLUMN EVENT LISTENER
-document.getElementById('1').addEventListener('click', () => {
-    let i = 0
-    if(player1.isTurn)
-    {
-        const placeToken = setInterval( () => {
-            dropToken(player1, player2, i, placeToken, column2)
-            i++
-        }, 400)
-        player1.isTurn = false
-        player2.isTurn = true
-    }
-    else if(player2.isTurn) 
-    {
-        const placeToken = setInterval( () => {
-            dropToken(player2, player1, i, placeToken, column2)
-            i++ 
-        },400)
-        player2.isTurn = false
-        player1.isTurn = true
-    }
-})
+document.getElementById('1').addEventListener('click', () => {play(column2)})
 
 //THIRD COLUMN EVENT LISTENER
-document.getElementById('2').addEventListener('click', () => {
-    let i = 0
-    if(player1.isTurn)
-    {
-        const placeToken = setInterval( () => {
-            dropToken(player1, player2, i, placeToken, column3)
-            i++
-        }, 400)
-        player1.isTurn = false
-        player2.isTurn = true
-    }
-    else if(player2.isTurn) 
-    {
-        const placeToken = setInterval( () => {
-            dropToken(player2, player1, i, placeToken, column3)
-            i++
-        }, 400)
-        player2.isTurn = false
-        player1.isTurn = true
-    }
-})
+document.getElementById('2').addEventListener('click', () => {play(column3)})
 
 //FOURTH COLUMN EVENT LISTENER
-document.getElementById('3').addEventListener('click', () => {
-    let i = 0
-    if(player1.isTurn)
-    {
-        const placeToken = setInterval( () => {
-            dropToken(player1, player2, i, placeToken, column4)
-            i++
-        }, 400)
-        player1.isTurn = false
-        player2.isTurn = true
-    }
-    else if(player2.isTurn) 
-    {
-        const placeToken = setInterval( () => {
-            dropToken(player2, player1, i, placeToken, column4)
-            i++    
-        }, 400)
-        player2.isTurn = false
-        player1.isTurn = true
-    }
-})
+document.getElementById('3').addEventListener('click', () => {play(column4)})
 
 //FIFTH COLUMN EVENT LISTENER
-document.getElementById('4').addEventListener('click', () => {
-    let i = 0
-    if(player1.isTurn)
-    {
-        const placeToken = setInterval( () => {
-            dropToken(player1, player2, i, placeToken, column5)
-            i++
-        }, 400)
-        player1.isTurn = false
-        player2.isTurn = true
-    }
-    else if(player2.isTurn) 
-    {
-        const placeToken = setInterval( () => {
-            dropToken(player2, player1, i, placeToken, column5)
-            i++    
-        }, 400)
-        player2.isTurn = false
-        player1.isTurn = true
-    }
-})
+document.getElementById('4').addEventListener('click', () => {play(column5)})
 
-//SIX COLUMN EVENT LISTENER
-document.getElementById('5').addEventListener('click', () => {
-    let i = 0
-    if(player1.isTurn)
-    {
-        const placeToken = setInterval( () => {
-            dropToken(player1, player2, i, placeToken, column6)
-            i++
-        }, 400)
-        player1.isTurn = false
-        player2.isTurn = true
-    }
-    else if(player2.isTurn) 
-    {
-        const placeToken = setInterval( () => {
-            dropToken(player2, player1, i, placeToken, column6)
-            i++    
-        }, 400)
-        player2.isTurn = false
-        player1.isTurn = true
-    }
-})
+//SIXTH COLUMN EVENT LISTENER
+document.getElementById('5').addEventListener('click', () => {play(column6)})

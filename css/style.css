@@ -1,7 +1,7 @@
 #boardGame {
     display: grid;
     grid-template-columns: auto auto auto auto auto auto;
-    background-color: lightskyblue;
+    background-color: #0384fc;
     width: 50%;
     margin: 50px auto;
 }
