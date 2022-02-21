@@ -3,6 +3,8 @@ console.log('Linked.')
 const resetButton = document.getElementById('resetGame')
 const newGameButton = document.getElementById('newGame')
 const message = document.getElementById('message')
+const player1Score = document.getElementById('player1Score')
+const player2Score = document.getElementById('player2Score')
 const boardGame = document.getElementById('boardGame')
 // Board game columns.
 const column1 = [0, 6, 12, 18, 24]
@@ -46,6 +48,54 @@ for(let i = 0; i < 30; i++)
 }
 
 /******************* FUNCTIONS ********************/
+/*
+    Reset game completely. Erase scoreboard and create new one. Player points are set back to 0
+    return -  no value returned
+*/
+const resetGame = () => {
+    newGame()
+    player1.score = 0
+    player1Score.textContent = 0
+    player2.score = 0
+    player2Score.textContent = 0
+}
+
+/*
+   Create new game instance. Remove all red and yellow classes from divs and readd the white class
+   return - no value returned
+*/
+const newGame = () => {
+    for(let i = 0; i < 30; i++)
+    {
+        if(document.getElementById(`${i}`).classList.contains('red'))
+        {
+            document.getElementById(`${i}`).classList.remove('red')
+            document.getElementById(`${i}`).classList.add('white')
+        }
+        else if(document.getElementById(`${i}`).classList.contains('yellow'))
+        {
+            document.getElementById(`${i}`).classList.remove('yellow')
+            document.getElementById(`${i}`).classList.add('white')
+        }
+    }
+    addListeners()
+    message.textContent = "Player-1's turn"
+    player1.isTurn = true
+    player2.isTurn = false
+}
+
+/*
+   Adds the event listeners on the first row (circle) of each column
+   return - no value returned
+*/
+const addListeners = () => {
+    document.getElementById(`0`).addEventListener('click', column1EventHandler)
+    document.getElementById(`1`).addEventListener('click', column2EventHandler)
+    document.getElementById(`2`).addEventListener('click', column3EventHandler)
+    document.getElementById(`3`).addEventListener('click', column4EventHandler)
+    document.getElementById(`4`).addEventListener('click', column5EventHandler)
+    document.getElementById(`5`).addEventListener('click', column6EventHandler)
+}
 
 /*
    Removes the event listeners on the first row (circle) of each column
@@ -141,6 +191,8 @@ const play = (column) => {
             {
                 alert('Player 1 is the winner')
                 message.textContent = 'Player 1 wins!'
+                player1.score++
+                player1Score.textContent = player1.score
                 clearInterval(placeToken)
             }
             dropToken(player1, player2, i, placeToken, column)
@@ -157,6 +209,8 @@ const play = (column) => {
             {
                 alert('Player 2 is the winner')
                 message.textContent = 'Player 2 wins!'
+                player2.score++
+                player2Score.textContent = player2.score
                 clearInterval(placeToken)
             }
             dropToken(player2, player1, i, placeToken, column)
@@ -195,3 +249,9 @@ document.getElementById('4').addEventListener('click', column5EventHandler)
 
 //SIXTH COLUMN EVENT LISTENER
 document.getElementById('5').addEventListener('click', column6EventHandler)
+
+// Reset game
+resetButton.addEventListener('click', resetGame)
+
+// New game
+newGameButton.addEventListener('click', newGame)
