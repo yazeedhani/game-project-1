@@ -45,7 +45,7 @@ for(let i = 0; i < 30; i++)
     const squareDiv = document.createElement('div')
     squareDiv.id = i
     squareDiv.classList.add('color', 'white')
-    // squareDiv.textContent = i 
+    squareDiv.textContent = i 
     boardGame.appendChild(squareDiv)
 }
 
@@ -64,7 +64,8 @@ const resetGame = () => {
 }
 
 /*
-   Create new game instance. Remove all red and yellow classes from divs and readd the white class
+   Create new game instance. Remove all red and yellow classes from divs and read the white class
+   Re-add event listeners and reset rows played in each column to zero
    return - no value returned
 */
 const newGame = () => {
@@ -85,6 +86,12 @@ const newGame = () => {
     message.textContent = "Player-1's turn"
     player1.isTurn = true
     opponent.isTurn = false
+    rowPlayedColumn1 = 0
+    rowPlayedColumn2 = 0
+    rowPlayedColumn3 = 0
+    rowPlayedColumn4 = 0
+    rowPlayedColumn5 = 0
+    rowPlayedColumn6 = 0
 }
 
 /*
@@ -149,37 +156,31 @@ const checkWinner = (winningCombinations, player) => {
    parameter4 - placeToken: a setInveral function ID to stop the setInterval function when column is full
    return - no value returned
 */
-const dropToken = (player1, opponent, i, placeToken, column, eventHandler, event) => {
-    // console.log(i, player1.name)
-    console.log(column)
-    console.log(event.target)
+const dropToken = (player1, opponent, i, placeToken, columnArray) => {
     //if i is 5, then this means the column is full with tokens and stop executing this function
     if(i === 5)
     {
         clearInterval(placeToken)
-        event.target.removeEventListener('click', eventHandler)
-        return
-        console.log(i, player1.name)
     }
     //checks the first circle(row) in the current column
     //set the circle's color to red or yellow
-    else if(i === 0 && document.getElementById(`${column[i]}`).classList.contains('white') && !document.getElementById(`${column[i]}`).classList.contains(opponent.tokenColor))
+    else if(i === 0 && document.getElementById(`${columnArray[i]}`).classList.contains('white') && !document.getElementById(`${columnArray[i]}`).classList.contains(opponent.tokenColor))
     {
-        console.log(i, player1.name)
-        document.getElementById(`${column[i]}`).classList.remove('white')
-        document.getElementById(`${column[i]}`).classList.add(player1.tokenColor)
+        // console.log(i, player1.name)
+        document.getElementById(`${columnArray[i]}`).classList.remove('white')
+        document.getElementById(`${columnArray[i]}`).classList.add(player1.tokenColor)
     }
     //checks the the rest of the circles (rows) in the current column
     // resets the previous circle to white and sets the current circle to red or yellow
-    else if(document.getElementById(`${column[i]}`).classList.contains('white') && !document.getElementById(`${column[i]}`).classList.contains(opponent.tokenColor))
+    else if(document.getElementById(`${columnArray[i]}`).classList.contains('white') && !document.getElementById(`${columnArray[i]}`).classList.contains(opponent.tokenColor))
     {
-        console.log(i, player1.name)
+        // console.log(i, player1.name)
         //set previous circle color back to white
-        document.getElementById(`${column[i - 1]}`).classList.remove(player1.tokenColor)
-        document.getElementById(`${column[i - 1]}`).classList.add('white')
+        document.getElementById(`${columnArray[i - 1]}`).classList.remove(player1.tokenColor)
+        document.getElementById(`${columnArray[i - 1]}`).classList.add('white')
         // set current circle color to red or yellow
-        document.getElementById(`${column[i]}`).classList.remove('white')
-        document.getElementById(`${column[i]}`).classList.add(player1.tokenColor)
+        document.getElementById(`${columnArray[i]}`).classList.remove('white')
+        document.getElementById(`${columnArray[i]}`).classList.add(player1.tokenColor)
     }
 }
 
@@ -191,13 +192,20 @@ const dropToken = (player1, opponent, i, placeToken, column, eventHandler, event
    parameter1 - column: array of indixes for each column in the grid.
    return - no value returned
 */
-const play = (column, eventHandler, event) => {
-    let i = 0 //keeps track setInterval to clear it at i = 5, meaning column is full.
-
+// To keep track of how many rows are filled in each column
+let rowPlayedColumn1 = 0
+let rowPlayedColumn2 = 0
+let rowPlayedColumn3 = 0
+let rowPlayedColumn4 = 0
+let rowPlayedColumn5 = 0
+let rowPlayedColumn6 = 0
+const play = (columnArray, eventHandler, event, colNumber) => {
+    let setIntervalCounter = 0 //keeps track setInterval to clear it at i = 5, meaning column is full.
     if(player1.isTurn)
     {
         // Will drop the token into new position every 4 seconds until its reaches its optimal position.
-        const placeToken = setInterval( (event) => {
+        const placeToken = setInterval( () => {
+
             if(checkWinner(winningCombinations, player1))
             {
                 alert('Player 1 is the winner')
@@ -206,12 +214,37 @@ const play = (column, eventHandler, event) => {
                 player1Score.textContent = player1.score
                 clearInterval(placeToken)
             }
-            dropToken(player1, opponent, i, placeToken, column, eventHandler, event)
-            i++
+            dropToken(player1, opponent, setIntervalCounter, placeToken, columnArray)
+            setIntervalCounter++
         }, 400)
         player1.isTurn = false
         opponent.isTurn = true
         message.textContent = "Player-2's turn"
+        // console.log(`i = `, setIntervalCounter)
+        if(colNumber === 'column1')
+        {
+            rowPlayedColumn1++
+        }
+        else if(colNumber === 'column2')
+        {
+            rowPlayedColumn2++
+        }
+        else if(colNumber === 'column3')
+        {
+            rowPlayedColumn3++
+        }
+        else if(colNumber === 'column4')
+        {
+            rowPlayedColumn4++
+        }
+        else if(colNumber === 'column5')
+        {
+            rowPlayedColumn5++
+        }
+        else if(colNumber === 'column6')
+        {
+            rowPlayedColumn6++
+        }
     }
     else if(opponent.isTurn) 
     {
@@ -224,13 +257,68 @@ const play = (column, eventHandler, event) => {
                 player2Score.textContent = opponent.score
                 clearInterval(placeToken)
             }
-            dropToken(opponent, player1, i, placeToken, column)
-            i++ 
+            dropToken(opponent, player1, setIntervalCounter, placeToken, columnArray)
+            setIntervalCounter++ 
         }, 400)
         opponent.isTurn = false
         player1.isTurn = true
         message.textContent = "Player-1's turn"
+        // console.log(`i = `, setIntervalCounter)
+        if(colNumber === 'column1')
+        {
+            rowPlayedColumn1++
+        }
+        else if(colNumber === 'column2')
+        {
+            rowPlayedColumn2++
+        }
+        else if(colNumber === 'column3')
+        {
+            rowPlayedColumn3++
+        }
+        else if(colNumber === 'column4')
+        {
+            rowPlayedColumn4++
+        }
+        else if(colNumber === 'column5')
+        {
+            rowPlayedColumn5++
+        }
+        else if(colNumber === 'column6')
+        {
+            rowPlayedColumn6++
+        }
     }
+    if(rowPlayedColumn1 === 5 && colNumber === 'column1')
+    {
+        event.target.removeEventListener('click', eventHandler)
+    }
+    if(rowPlayedColumn2 === 5 && colNumber === 'column2')
+    {
+        event.target.removeEventListener('click', eventHandler)
+    }
+    if(rowPlayedColumn3 === 5 && colNumber === 'column3')
+    {
+        event.target.removeEventListener('click', eventHandler)
+    }
+    if(rowPlayedColumn4 === 5 && colNumber === 'column4')
+    {
+        event.target.removeEventListener('click', eventHandler)
+    }
+    if(rowPlayedColumn5 === 5 && colNumber === 'column5')
+    {
+        event.target.removeEventListener('click', eventHandler)
+    }
+    if(rowPlayedColumn6 === 5 && colNumber === 'column6')
+    {
+        event.target.removeEventListener('click', eventHandler)
+    }
+    console.log('row played: ', rowPlayedColumn1, 'column played:', columnArray)
+    console.log('row played: ', rowPlayedColumn2, 'column played:', columnArray)
+    console.log('row played: ', rowPlayedColumn3, 'column played:', columnArray)
+    console.log('row played: ', rowPlayedColumn4, 'column played:', columnArray)
+    console.log('row played: ', rowPlayedColumn5, 'column played:', columnArray)
+    console.log('row played: ', rowPlayedColumn6, 'column played:', columnArray)
 }
 
 /*
@@ -264,12 +352,12 @@ const computerMove = () => {
    parameter1 - column: array of indixes for each column in the grid.
    return - no value returned
 */
-const playComputer = (column) => {
+const playComputer = (columnArray) => {
     let i = 0 //keeps track of setInterval to clear it at i = 5, meaning column is full.
 
     // Will drop the token into new position every 4 seconds until its reaches its optimal position.
     const placeToken = setInterval( () => {
-        dropToken(player1, opponent, i, placeToken, column)
+        dropToken(player1, opponent, i, placeToken, columnArray)
         i++
     }, 400)
     if(checkWinner(winningCombinations, player1))
@@ -290,63 +378,64 @@ const playComputer = (column) => {
 
 // A play() function for each event handler for each column
 const column1EventHandler = (event) => {
+    // console.log(column1EventHandler)
     if(opponent.name === 'Computer')
     {
         playComputer(column1)
     }
     else
     {
-        play(column1, column1EventHandler, event)
+        play(column1, column1EventHandler, event, 'column1')
     }
 }
-const column2EventHandler = () => {
+const column2EventHandler = (event) => {
     if(opponent.name === 'Computer')
     {
         playComputer(column2)
     }
     else
     {
-        play(column2)
+        play(column2, column2EventHandler, event, 'column2')
     }
 }
-const column3EventHandler = () => {
+const column3EventHandler = (event) => {
     if(opponent.name === 'Computer')
     {
         playComputer(column3)
     }
     else
     {
-        play(column3)
+        play(column3, column3EventHandler, event, 'column3')
     }
 }
-const column4EventHandler = () => {
+const column4EventHandler = (event) => {
     if(opponent.name === 'Computer')
     {
         playComputer(column4)
     }
     else
     {
-        play(column4)
+        play(column4, column4EventHandler, event, 'column4')
     }
 }
-const column5EventHandler = () => {
+const column5EventHandler = (event) => {
     if(opponent.name === 'Computer')
     {
         playComputer(column5)
     }
     else
     {
-        play(column5)
+        play(column5, column5EventHandler, event, 'column5')
     }
 }
-const column6EventHandler = () => {
+const column6EventHandler = (event) => {
     if(opponent.name === 'Computer')
     {
         playComputer(column6)
     }
     else
     {
-        play(column6)
+        play(column6, column6EventHandler, event, 'column6')
     }
 }
 
@@ -354,7 +443,7 @@ console.log(opponent)
 
 /******************* EVENT LISTENERS ********************/
 //FIRST COLUMN EVENT LISTENER
-document.getElementById('0').addEventListener('click', (event) => {column1EventHandler(event)})
+document.getElementById('0').addEventListener('click', column1EventHandler)
 
 //SECOND COLUMN EVENT LISTENER
 document.getElementById('1').addEventListener('click', column2EventHandler)
