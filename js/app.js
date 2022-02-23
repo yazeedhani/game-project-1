@@ -37,7 +37,6 @@ class Player {
 }
 
 const player1 = new Player('Player-1', 'red', true)
-// const player2 = new Player('Player-2', 'yellow', false)
 let opponent = null //decides who you play against
 
 // Create the 30 Circle divs in div boardGame
@@ -227,10 +226,6 @@ const play = (column) => {
     }
 }
 
-// const allColumns = [column1, column2, column3, column4, column5, column6]
-// let compChoice = Math.floor(Math.random() * allColumns.length)
-// console.log(allColumns[compChoice])
-
 /*
    Computer user to drop token ata a random column
    parameter1 - column: array of indixes for each column in the grid.
@@ -244,17 +239,16 @@ const computerMove = () => {
     const placeToken = setInterval( () => {
         dropToken(opponent, player1, counter, placeToken, allColumns[compChoice])
         counter++ 
-        if(checkWinner(winningCombinations, opponent))
-        {
-            alert('Computer is the winner')
-            message.textContent = 'Computer wins!'
-            opponent.score++
-            player2Score.textContent = opponent.score
-            clearInterval(placeToken)
-        }
     }, 400)
-    player1.isTurn = true
-    opponent.isTurn = false
+    if(checkWinner(winningCombinations, opponent))
+    {
+        alert('Computer is the winner')
+        message.textContent = 'Computer wins!'
+        opponent.score++
+        player2Score.textContent = opponent.score
+        // clearInterval(placeToken)
+        return
+    }
     message.textContent = "Player-1's turn"
 }
 
@@ -270,17 +264,21 @@ const playComputer = (column) => {
     const placeToken = setInterval( () => {
         dropToken(player1, opponent, i, placeToken, column)
         i++
-        if(checkWinner(winningCombinations, player1))
-        {
-            alert('Player 1 is the winner')
-            message.textContent = 'Player 1 wins!'
-            player1.score++
-            player1Score.textContent = player1.score
-            clearInterval(placeToken)
-        }
     }, 400)
-    message.textContent = "Computer's turn"
-    setTimeout(computerMove, 2000)
+    if(checkWinner(winningCombinations, player1))
+    {
+        alert('Player 1 is the winner')
+        message.textContent = 'Player 1 wins!'
+        player1.score++
+        player1Score.textContent = player1.score
+        // clearInterval(placeToken)
+        return
+    }
+    else
+    {
+        message.textContent = "Computer's turn"
+        setTimeout(computerMove, 2000)
+    }
 }
 
 // A play() function for each event listener for each column
@@ -344,11 +342,6 @@ const column6EventHandler = () => {
         play(column6)
     }
 }
-// const column2EventHandler = () => {play(column2)}
-// const column3EventHandler = () => {play(column3)}
-// const column4EventHandler = () => {play(column4)}
-// const column5EventHandler = () => {play(column5)}
-// const column6EventHandler = () => {play(column6)}
 
 console.log(opponent)
 
