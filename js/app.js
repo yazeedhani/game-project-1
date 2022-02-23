@@ -149,17 +149,23 @@ const checkWinner = (winningCombinations, player) => {
    parameter4 - placeToken: a setInveral function ID to stop the setInterval function when column is full
    return - no value returned
 */
-const dropToken = (player1, opponent, i, placeToken, column) => {
-    console.log(i, player1.name)
+const dropToken = (player1, opponent, i, placeToken, column, eventHandler, event) => {
+    // console.log(i, player1.name)
+    console.log(column)
+    console.log(event.target)
     //if i is 5, then this means the column is full with tokens and stop executing this function
     if(i === 5)
     {
         clearInterval(placeToken)
+        event.target.removeEventListener('click', eventHandler)
+        return
+        console.log(i, player1.name)
     }
     //checks the first circle(row) in the current column
     //set the circle's color to red or yellow
     else if(i === 0 && document.getElementById(`${column[i]}`).classList.contains('white') && !document.getElementById(`${column[i]}`).classList.contains(opponent.tokenColor))
     {
+        console.log(i, player1.name)
         document.getElementById(`${column[i]}`).classList.remove('white')
         document.getElementById(`${column[i]}`).classList.add(player1.tokenColor)
     }
@@ -167,6 +173,7 @@ const dropToken = (player1, opponent, i, placeToken, column) => {
     // resets the previous circle to white and sets the current circle to red or yellow
     else if(document.getElementById(`${column[i]}`).classList.contains('white') && !document.getElementById(`${column[i]}`).classList.contains(opponent.tokenColor))
     {
+        console.log(i, player1.name)
         //set previous circle color back to white
         document.getElementById(`${column[i - 1]}`).classList.remove(player1.tokenColor)
         document.getElementById(`${column[i - 1]}`).classList.add('white')
@@ -184,13 +191,13 @@ const dropToken = (player1, opponent, i, placeToken, column) => {
    parameter1 - column: array of indixes for each column in the grid.
    return - no value returned
 */
-const play = (column) => {
+const play = (column, eventHandler, event) => {
     let i = 0 //keeps track setInterval to clear it at i = 5, meaning column is full.
 
     if(player1.isTurn)
     {
         // Will drop the token into new position every 4 seconds until its reaches its optimal position.
-        const placeToken = setInterval( () => {
+        const placeToken = setInterval( (event) => {
             if(checkWinner(winningCombinations, player1))
             {
                 alert('Player 1 is the winner')
@@ -199,7 +206,7 @@ const play = (column) => {
                 player1Score.textContent = player1.score
                 clearInterval(placeToken)
             }
-            dropToken(player1, opponent, i, placeToken, column)
+            dropToken(player1, opponent, i, placeToken, column, eventHandler, event)
             i++
         }, 400)
         player1.isTurn = false
@@ -281,15 +288,15 @@ const playComputer = (column) => {
     }
 }
 
-// A play() function for each event listener for each column
-const column1EventHandler = () => {
+// A play() function for each event handler for each column
+const column1EventHandler = (event) => {
     if(opponent.name === 'Computer')
     {
         playComputer(column1)
     }
     else
     {
-        play(column1)
+        play(column1, column1EventHandler, event)
     }
 }
 const column2EventHandler = () => {
@@ -347,7 +354,7 @@ console.log(opponent)
 
 /******************* EVENT LISTENERS ********************/
 //FIRST COLUMN EVENT LISTENER
-document.getElementById('0').addEventListener('click', column1EventHandler)
+document.getElementById('0').addEventListener('click', (event) => {column1EventHandler(event)})
 
 //SECOND COLUMN EVENT LISTENER
 document.getElementById('1').addEventListener('click', column2EventHandler)
