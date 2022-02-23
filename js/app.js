@@ -46,7 +46,7 @@ for(let i = 0; i < 30; i++)
     const squareDiv = document.createElement('div')
     squareDiv.id = i
     squareDiv.classList.add('color', 'white')
-    squareDiv.textContent = i 
+    // squareDiv.textContent = i 
     boardGame.appendChild(squareDiv)
 }
 
@@ -151,6 +151,7 @@ const checkWinner = (winningCombinations, player) => {
    return - no value returned
 */
 const dropToken = (player1, opponent, i, placeToken, column) => {
+    console.log(i, player1.name)
     //if i is 5, then this means the column is full with tokens and stop executing this function
     if(i === 5)
     {
@@ -235,11 +236,14 @@ const play = (column) => {
    parameter1 - column: array of indixes for each column in the grid.
    return - no value returned
 */
-const computerMove = (i) => {
-    let counter = i
+const computerMove = () => {
+    let counter = 0
     const allColumns = [column1, column2, column3, column4, column5, column6]
     let compChoice = Math.floor(Math.random() * allColumns.length)
+    console.log(allColumns[compChoice])
     const placeToken = setInterval( () => {
+        dropToken(opponent, player1, counter, placeToken, allColumns[compChoice])
+        counter++ 
         if(checkWinner(winningCombinations, opponent))
         {
             alert('Computer is the winner')
@@ -248,8 +252,6 @@ const computerMove = (i) => {
             player2Score.textContent = opponent.score
             clearInterval(placeToken)
         }
-        dropToken(opponent, player1, counter, placeToken, allColumns[compChoice])
-        counter++ 
     }, 400)
     player1.isTurn = true
     opponent.isTurn = false
@@ -264,26 +266,21 @@ const computerMove = (i) => {
 const playComputer = (column) => {
     let i = 0 //keeps track of setInterval to clear it at i = 5, meaning column is full.
 
-    if(player1.isTurn)
-    {
-        // Will drop the token into new position every 4 seconds until its reaches its optimal position.
-        const placeToken = setInterval( () => {
-            if(checkWinner(winningCombinations, player1))
-            {
-                alert('Player 1 is the winner')
-                message.textContent = 'Player 1 wins!'
-                player1.score++
-                player1Score.textContent = player1.score
-                clearInterval(placeToken)
-            }
-            dropToken(player1, opponent, i, placeToken, column)
-            i++
-        }, 400)
-        player1.isTurn = false
-        opponent.isTurn = true
-        message.textContent = "Computer's turn"
-        setTimeout( computerMove(i), 5000)
-    }
+    // Will drop the token into new position every 4 seconds until its reaches its optimal position.
+    const placeToken = setInterval( () => {
+        dropToken(player1, opponent, i, placeToken, column)
+        i++
+        if(checkWinner(winningCombinations, player1))
+        {
+            alert('Player 1 is the winner')
+            message.textContent = 'Player 1 wins!'
+            player1.score++
+            player1Score.textContent = player1.score
+            clearInterval(placeToken)
+        }
+    }, 400)
+    message.textContent = "Computer's turn"
+    setTimeout(computerMove, 2000)
 }
 
 // A play() function for each event listener for each column
