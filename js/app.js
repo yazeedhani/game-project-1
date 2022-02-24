@@ -5,6 +5,8 @@ const newGameButton = document.getElementById('newGame')
 const computer = document.getElementById('computer')
 const multiplayer = document.getElementById('multiplayer')
 const message = document.getElementById('message')
+const player1Paragraph = document.getElementById('player1')
+const opponentParagraph = document.getElementById('opponent')
 const player1Score = document.getElementById('player1Score')
 const player2Score = document.getElementById('player2Score')
 const boardGame = document.getElementById('boardGame')
@@ -136,12 +138,25 @@ const checkWinner = (winningCombinations, player) => {
         && document.getElementById(`${winningCombinations[i][2]}`).classList.contains(`${player.tokenColor}`) 
         && document.getElementById(`${winningCombinations[i][3]}`).classList.contains(`${player.tokenColor}`))
         {
+            // alert(`${player.name} is the winner`)
+            message.textContent = `${player.name.toUpperCase()} WINS!`
+            player.score++
+            if(player.name === 'Player-1')
+            {
+                player1Score.textContent = player.score
+            }
+            else
+            {
+                player2Score.textContent = player.score
+            }
             console.log(document.getElementById(`${winningCombinations[i][0]}`))
             console.log(document.getElementById(`${winningCombinations[i][1]}`))
             console.log(document.getElementById(`${winningCombinations[i][2]}`))
             console.log(document.getElementById(`${winningCombinations[i][3]}`))
+            player.isTurn = false
+            opponent.isTurn = false
             removeListeners()
-            return true
+            // return true
         }
     }
 }
@@ -161,12 +176,13 @@ const dropToken = (player1, opponent, i, placeToken, columnArray) => {
     if(i === 5)
     {
         clearInterval(placeToken)
+        console.log('checking winner')
+        checkWinner(winningCombinations, player1) // will calculate the winner once the token reaches the last emtpy circle
     }
     //checks the first circle(row) in the current column
     //set the circle's color to red or yellow
     else if(i === 0 && document.getElementById(`${columnArray[i]}`).classList.contains('white') && !document.getElementById(`${columnArray[i]}`).classList.contains(opponent.tokenColor))
     {
-        // console.log(i, player1.name)
         document.getElementById(`${columnArray[i]}`).classList.remove('white')
         document.getElementById(`${columnArray[i]}`).classList.add(player1.tokenColor)
     }
@@ -174,7 +190,6 @@ const dropToken = (player1, opponent, i, placeToken, columnArray) => {
     // resets the previous circle to white and sets the current circle to red or yellow
     else if(document.getElementById(`${columnArray[i]}`).classList.contains('white') && !document.getElementById(`${columnArray[i]}`).classList.contains(opponent.tokenColor))
     {
-        // console.log(i, player1.name)
         //set previous circle color back to white
         document.getElementById(`${columnArray[i - 1]}`).classList.remove(player1.tokenColor)
         document.getElementById(`${columnArray[i - 1]}`).classList.add('white')
@@ -182,6 +197,33 @@ const dropToken = (player1, opponent, i, placeToken, columnArray) => {
         document.getElementById(`${columnArray[i]}`).classList.remove('white')
         document.getElementById(`${columnArray[i]}`).classList.add(player1.tokenColor)
     }
+}
+
+const checksRowsPlayedInColumn = (colNumber) => {
+    if(colNumber === 'column1')
+        {
+            rowPlayedColumn1++
+        }
+        else if(colNumber === 'column2')
+        {
+            rowPlayedColumn2++
+        }
+        else if(colNumber === 'column3')
+        {
+            rowPlayedColumn3++
+        }
+        else if(colNumber === 'column4')
+        {
+            rowPlayedColumn4++
+        }
+        else if(colNumber === 'column5')
+        {
+            rowPlayedColumn5++
+        }
+        else if(colNumber === 'column6')
+        {
+            rowPlayedColumn6++
+        }
 }
 
 /*
@@ -205,22 +247,13 @@ const play = (columnArray, eventHandler, event, colNumber) => {
     {
         // Will drop the token into new position every 4 seconds until its reaches its optimal position.
         const placeToken = setInterval( () => {
-
-            if(checkWinner(winningCombinations, player1))
-            {
-                alert('Player 1 is the winner')
-                message.textContent = 'Player 1 wins!'
-                player1.score++
-                player1Score.textContent = player1.score
-                clearInterval(placeToken)
-            }
             dropToken(player1, opponent, setIntervalCounter, placeToken, columnArray)
             setIntervalCounter++
         }, 400)
+        console.log('token dropped - Red')
         player1.isTurn = false
         opponent.isTurn = true
         message.textContent = "Player-2's turn"
-        // console.log(`i = `, setIntervalCounter)
         if(colNumber === 'column1')
         {
             rowPlayedColumn1++
@@ -249,21 +282,13 @@ const play = (columnArray, eventHandler, event, colNumber) => {
     else if(opponent.isTurn) 
     {
         const placeToken = setInterval( () => {
-            if(checkWinner(winningCombinations, opponent))
-            {
-                alert('Player 2 is the winner')
-                message.textContent = 'Player 2 wins!'
-                opponent.score++
-                player2Score.textContent = opponent.score
-                clearInterval(placeToken)
-            }
             dropToken(opponent, player1, setIntervalCounter, placeToken, columnArray)
             setIntervalCounter++ 
         }, 400)
+        console.log('token dropped - Yellow')
         opponent.isTurn = false
         player1.isTurn = true
         message.textContent = "Player-1's turn"
-        // console.log(`i = `, setIntervalCounter)
         if(colNumber === 'column1')
         {
             rowPlayedColumn1++
@@ -288,7 +313,10 @@ const play = (columnArray, eventHandler, event, colNumber) => {
         {
             rowPlayedColumn6++
         }
+        
     }
+    
+    // If rowPlayedColumn# is 5, then remove the event listener from the column so it won't able to be clicked by a player
     if(rowPlayedColumn1 === 5 && colNumber === 'column1')
     {
         event.target.removeEventListener('click', eventHandler)
@@ -313,12 +341,12 @@ const play = (columnArray, eventHandler, event, colNumber) => {
     {
         event.target.removeEventListener('click', eventHandler)
     }
-    console.log('row played: ', rowPlayedColumn1, 'column played:', columnArray)
-    console.log('row played: ', rowPlayedColumn2, 'column played:', columnArray)
-    console.log('row played: ', rowPlayedColumn3, 'column played:', columnArray)
-    console.log('row played: ', rowPlayedColumn4, 'column played:', columnArray)
-    console.log('row played: ', rowPlayedColumn5, 'column played:', columnArray)
-    console.log('row played: ', rowPlayedColumn6, 'column played:', columnArray)
+    // console.log('row played: ', rowPlayedColumn1, 'column played:', columnArray)
+    // console.log('row played: ', rowPlayedColumn2, 'column played:', columnArray)
+    // console.log('row played: ', rowPlayedColumn3, 'column played:', columnArray)
+    // console.log('row played: ', rowPlayedColumn4, 'column played:', columnArray)
+    // console.log('row played: ', rowPlayedColumn5, 'column played:', columnArray)
+    // console.log('row played: ', rowPlayedColumn6, 'column played:', columnArray)
 }
 
 /*
@@ -327,23 +355,15 @@ const play = (columnArray, eventHandler, event, colNumber) => {
    return - no value returned
 */
 const computerMove = () => {
-    let counter = 0
+    let setIntervalCounter = 0
     const allColumns = [column1, column2, column3, column4, column5, column6]
     let compChoice = Math.floor(Math.random() * allColumns.length)
-    console.log(allColumns[compChoice])
+    // console.log(allColumns[compChoice])
     const placeToken = setInterval( () => {
-        dropToken(opponent, player1, counter, placeToken, allColumns[compChoice])
-        counter++ 
+        dropToken(opponent, player1, setIntervalCounter, placeToken, allColumns[compChoice])
+        setIntervalCounter++ 
     }, 400)
-    if(checkWinner(winningCombinations, opponent))
-    {
-        alert('Computer is the winner')
-        message.textContent = 'Computer wins!'
-        opponent.score++
-        player2Score.textContent = opponent.score
-        // clearInterval(placeToken)
-        return
-    }
+
     message.textContent = "Player-1's turn"
 }
 
@@ -353,27 +373,17 @@ const computerMove = () => {
    return - no value returned
 */
 const playComputer = (columnArray) => {
-    let i = 0 //keeps track of setInterval to clear it at i = 5, meaning column is full.
+    let setIntervalCounter = 0 //keeps track of setInterval to clear it at i = 5, meaning column is full.
 
     // Will drop the token into new position every 4 seconds until its reaches its optimal position.
     const placeToken = setInterval( () => {
-        dropToken(player1, opponent, i, placeToken, columnArray)
-        i++
+        dropToken(player1, opponent, setIntervalCounter, placeToken, columnArray)
+        setIntervalCounter++
     }, 400)
-    if(checkWinner(winningCombinations, player1))
-    {
-        alert('Player 1 is the winner')
-        message.textContent = 'Player 1 wins!'
-        player1.score++
-        player1Score.textContent = player1.score
-        // clearInterval(placeToken)
-        return
-    }
-    else
-    {
+
         message.textContent = "Computer's turn"
+        checksRowsPlayedInColumn()
         setTimeout(computerMove, 2000)
-    }
 }
 
 // A play() function for each event handler for each column
@@ -381,7 +391,7 @@ const column1EventHandler = (event) => {
     // console.log(column1EventHandler)
     if(opponent.name === 'Computer')
     {
-        playComputer(column1)
+        playComputer(column1, column1EventHandler, event, 'column1')
     }
     else
     {
@@ -391,7 +401,7 @@ const column1EventHandler = (event) => {
 const column2EventHandler = (event) => {
     if(opponent.name === 'Computer')
     {
-        playComputer(column2)
+        playComputer(column2, column2EventHandler, event, 'column2')
     }
     else
     {
@@ -401,7 +411,7 @@ const column2EventHandler = (event) => {
 const column3EventHandler = (event) => {
     if(opponent.name === 'Computer')
     {
-        playComputer(column3)
+        playComputer(column3, column3EventHandler, event, 'column3')
     }
     else
     {
@@ -411,7 +421,7 @@ const column3EventHandler = (event) => {
 const column4EventHandler = (event) => {
     if(opponent.name === 'Computer')
     {
-        playComputer(column4)
+        playComputer(column4, column4EventHandler, event, 'column4')
     }
     else
     {
@@ -421,7 +431,7 @@ const column4EventHandler = (event) => {
 const column5EventHandler = (event) => {
     if(opponent.name === 'Computer')
     {
-        playComputer(column5)
+        playComputer(column5, column5EventHandler, event, 'column5')
     }
     else
     {
@@ -431,15 +441,13 @@ const column5EventHandler = (event) => {
 const column6EventHandler = (event) => {
     if(opponent.name === 'Computer')
     {
-        playComputer(column6)
+        playComputer(column6, column6EventHandler, event, 'column6')
     }
     else
     {
         play(column6, column6EventHandler, event, 'column6')
     }
 }
-
-console.log(opponent)
 
 /******************* EVENT LISTENERS ********************/
 //FIRST COLUMN EVENT LISTENER
@@ -471,6 +479,12 @@ multiplayer.addEventListener('click', () => {
     opponent = new Player('Player-2', 'yellow', false)
     console.log(opponent)
     resetGame()
+    player1Paragraph.style.display = 'inline-block'
+    player1Score.style.display = 'inline'
+    opponentParagraph.style.display = 'inline-block'
+    player2Score.style.display = 'inline'
+    opponentParagraph.textContent = 'Player 2: '
+
 })
 
 //computer mode
@@ -478,4 +492,9 @@ computer.addEventListener('click', () => {
     opponent = new Player('Computer', 'yellow', false)
     console.log(opponent)
     resetGame()
+    player1Paragraph.style.display = 'inline-block'
+    player1Score.style.display = 'inline'
+    opponentParagraph.style.display = 'inline-block'
+    player2Score.style.display = 'inline'
+    opponentParagraph.textContent = 'Computer: '
 })

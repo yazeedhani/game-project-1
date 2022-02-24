@@ -48,13 +48,17 @@ aside {
 }
 
 #player1, #opponent {
-    display: inline-block;
+    display: none;
     margin: 10px 20px;
 }
 
+#player1Score, #player2Score {
+    display: none;
+}
+
 #message {
-    width: 15%;
-    margin: 20px auto;
+    width: 7%;
+    margin: 40px auto;
 }
 
 .color {
