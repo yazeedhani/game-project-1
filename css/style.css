@@ -1,25 +1,76 @@
+body {
+    background-color: whitesmoke;
+    font-family: 'Righteous', cursive;
+}
+
+h1 {
+    margin: 30px 30px;
+}
+
+#container {
+    display: flex;
+    flex-direction: row;
+}
+
 #boardGame {
     display: grid;
     grid-template-columns: auto auto auto auto auto auto;
     background-color: #0384fc;
-    width: 50%;
-    margin: 50px auto;
+    /* background-color: black; */
+    border-radius: 10%;
+    width: 46%;
+    /* height: 40%; */
+    margin: 70px 190px;
+}
+
+aside {
+    margin: 60px 20px;
+}
+
+#start, #resetGame, #newGame, #computer, #multiplayer {
+    display: block;
+    margin: 20px 20px;
+    padding: 10px 20px;
+    font-family: 'Righteous', cursive;
+    border: 1px solid whitesmoke;
+    background-color: black;
+    color: whitesmoke;
+    width: 140px;
+    height: 60px;
+}
+
+#resetGame:hover, #newGame:hover, #computer:hover, #multiplayer:hover {
+    background-color: whitesmoke;
+    color: black;
+    border: 2px solid black;
+    width: 150px;
+    height: 70px;
+}
+
+#player1, #opponent {
+    display: inline-block;
+    margin: 10px 20px;
+}
+
+#message {
+    width: 15%;
+    margin: 20px auto;
 }
 
 .color {
-    background-color: white;
+    background-color: whitesmoke;
     border: 1px solid rgba(0, 0, 0, 0.8);
     padding: 20px;
     margin: 5px;
     font-size: 30px;
     text-align: center;
-    width: 100px;
-    height: 100px;
+    width: 80px;
+    height: 80px;
     border-radius: 100%;
   }
 
   .white {
-      background-color: white;
+      background-color: whitesmoke;
   }
 
   .red {

@@ -4,21 +4,31 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Righteous&family=Roboto:wght@300&display=swap" rel="stylesheet"> 
     <link rel="stylesheet" href="css/style.css">
     <title>Four In a Row</title>
 </head>
 <body>
     <h1>Four In a Row</h1>
-    <button id="start">Start Game</button>
-    <button id="resetGame">Reset Game</button>
-    <button id="newGame">New Game</button>
-    <button id="computer">Play Computer</button>
-    <button id="multiplayer">Multiplayer</button>
-    <p>Player 1: <span id="player1Score">0</span></p>
-    <p>Player 2: <span id="player2Score">0</span></p>
     <p id="message">Player-1's turn</p>
+    <div id="container">
+        <aside>
+            <!-- <button id="start">Start Game</button> -->
+            <p>Select to play against another player or the computer</p>
+            <button id="computer">Play Computer</button>
+            <button id="multiplayer">Multiplayer</button>
+            <button id="resetGame">Reset Game</button>
+            <button id="newGame">New Game</button>
 
-    <div id="boardGame"></div>
+            <br>
+            <p id="player1">Player 1: <span id="player1Score">0</span></p>
+            <p id="opponent">Player 2: <span id="player2Score">0</span></p>
+        </aside>
+
+        <div id="boardGame"></div>
+    </div>  
 
     <script src="js/app.js"></script>
 </body>
