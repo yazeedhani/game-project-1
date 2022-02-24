@@ -28,4 +28,4 @@ Four In a Row is a game that inolves 2 users, 2 human players or 1 human player 
 
 
 ## Stretch Plan
-- Add an option to choose between either multiplayer or computer
+- Add an option to choose between either multiplayer or computer - This stretch plan has been met

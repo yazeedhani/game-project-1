@@ -54,11 +54,13 @@ aside {
 
 #player1Score, #player2Score {
     display: none;
+    font-size: 20px;
 }
 
 #message {
-    width: 7%;
+    width: 9%;
     margin: 40px auto;
+    font-size: 20px;
 }
 
 .color {

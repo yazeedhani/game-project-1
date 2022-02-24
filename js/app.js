@@ -26,6 +26,13 @@ const winningCombinations = [
     [2,9,16,23], [1,8,15,22], [8,15,22,29], [0,7,14,21], [7,14,21,28], [6,13,20,27], 
     [18,13,8,3], [24,19,14,9], [19,14,9,4], [25,20,15,10], [20,15,10,5], [26,21,16,11]
 ]
+// To keep track of how many rows are filled in each column
+let rowsPlayedColumn1 = 0
+let rowsPlayedColumn2 = 0
+let rowsPlayedColumn3 = 0
+let rowsPlayedColumn4 = 0
+let rowsPlayedColumn5 = 0
+let rowsPlayedColumn6 = 0
 
 // Class to build player objects
 class Player {
@@ -88,12 +95,12 @@ const newGame = () => {
     message.textContent = "Player-1's turn"
     player1.isTurn = true
     opponent.isTurn = false
-    rowPlayedColumn1 = 0
-    rowPlayedColumn2 = 0
-    rowPlayedColumn3 = 0
-    rowPlayedColumn4 = 0
-    rowPlayedColumn5 = 0
-    rowPlayedColumn6 = 0
+    rowsPlayedColumn1 = 0
+    rowsPlayedColumn2 = 0
+    rowsPlayedColumn3 = 0
+    rowsPlayedColumn4 = 0
+    rowsPlayedColumn5 = 0
+    rowsPlayedColumn6 = 0
 }
 
 /*
@@ -128,7 +135,7 @@ const removeListeners = () => {
    on the first circle in each column.
    parameter1 - winningCombinations: array containing all the winning combos
    parameter2 - player: an object that represents the player
-   return - return true is there is a winner
+   return - no value returned
 */
 const checkWinner = (winningCombinations, player) => {
     for(let i = 0; i < winningCombinations.length; i++)
@@ -138,8 +145,8 @@ const checkWinner = (winningCombinations, player) => {
         && document.getElementById(`${winningCombinations[i][2]}`).classList.contains(`${player.tokenColor}`) 
         && document.getElementById(`${winningCombinations[i][3]}`).classList.contains(`${player.tokenColor}`))
         {
-            // alert(`${player.name} is the winner`)
             message.textContent = `${player.name.toUpperCase()} WINS!`
+
             player.score++
             if(player.name === 'Player-1')
             {
@@ -156,7 +163,6 @@ const checkWinner = (winningCombinations, player) => {
             player.isTurn = false
             opponent.isTurn = false
             removeListeners()
-            // return true
         }
     }
 }
@@ -199,31 +205,71 @@ const dropToken = (player1, opponent, i, placeToken, columnArray) => {
     }
 }
 
+/*
+   Counts the number of rows that have been played in each column. 
+   This is used to track if the column is full so the event listener on the column can be removed
+   parameter1 - colNumber: the specific column that was clicked represented by a number
+   return - no value returned
+*/
 const checksRowsPlayedInColumn = (colNumber) => {
     if(colNumber === 'column1')
-        {
-            rowPlayedColumn1++
-        }
-        else if(colNumber === 'column2')
-        {
-            rowPlayedColumn2++
-        }
-        else if(colNumber === 'column3')
-        {
-            rowPlayedColumn3++
-        }
-        else if(colNumber === 'column4')
-        {
-            rowPlayedColumn4++
-        }
-        else if(colNumber === 'column5')
-        {
-            rowPlayedColumn5++
-        }
-        else if(colNumber === 'column6')
-        {
-            rowPlayedColumn6++
-        }
+    {
+        rowsPlayedColumn1++
+    }
+    else if(colNumber === 'column2')
+    {
+        rowsPlayedColumn2++
+    }
+    else if(colNumber === 'column3')
+    {
+        rowsPlayedColumn3++
+    }
+    else if(colNumber === 'column4')
+    {
+        rowsPlayedColumn4++
+    }
+    else if(colNumber === 'column5')
+    {
+        rowsPlayedColumn5++
+    }
+    else if(colNumber === 'column6')
+    {
+        rowsPlayedColumn6++
+    }
+}
+
+/*
+   Removes the event listener from a column once it is filled with tokens.
+   parameter1 - colNumber: the specific column that was clicked represented by a number
+   parameter2 - event: event object.
+   parameter3 - eventHandler: the handler triggered by the click event.
+   return - no value returned
+*/
+const removeColumnEventListener = (colNumber, event, eventHandler) => {
+    if(rowsPlayedColumn1 === 5 && colNumber === 'column1')
+    {
+        event.target.removeEventListener('click', eventHandler)
+    }
+    if(rowsPlayedColumn2 === 5 && colNumber === 'column2')
+    {
+        event.target.removeEventListener('click', eventHandler)
+    }
+    if(rowsPlayedColumn3 === 5 && colNumber === 'column3')
+    {
+        event.target.removeEventListener('click', eventHandler)
+    }
+    if(rowsPlayedColumn4 === 5 && colNumber === 'column4')
+    {
+        event.target.removeEventListener('click', eventHandler)
+    }
+    if(rowsPlayedColumn5 === 5 && colNumber === 'column5')
+    {
+        event.target.removeEventListener('click', eventHandler)
+    }
+    if(rowsPlayedColumn6 === 5 && colNumber === 'column6')
+    {
+        event.target.removeEventListener('click', eventHandler)
+    }
 }
 
 /*
@@ -231,21 +277,17 @@ const checksRowsPlayedInColumn = (colNumber) => {
    setInterval() is used to check for a winner and drop the token at the right circle
    in the column by traversing through each circle first. Will also switch player turns
    after move is made.
-   parameter1 - column: array of indixes for each column in the grid.
+   parameter1 - columnArray: array of indixes for each column in the grid.
+   parameter2 - eventHandler: the handler triggered by the click event.
+   parameter3 - event: the event object.
+   parameter4 - colNumber: the column number the token was dropped in.
    return - no value returned
 */
-// To keep track of how many rows are filled in each column
-let rowPlayedColumn1 = 0
-let rowPlayedColumn2 = 0
-let rowPlayedColumn3 = 0
-let rowPlayedColumn4 = 0
-let rowPlayedColumn5 = 0
-let rowPlayedColumn6 = 0
 const play = (columnArray, eventHandler, event, colNumber) => {
     let setIntervalCounter = 0 //keeps track setInterval to clear it at i = 5, meaning column is full.
     if(player1.isTurn)
     {
-        // Will drop the token into new position every 4 seconds until its reaches its optimal position.
+        // Will drop the token into new position every 4 seconds until its reaches its the last empty circle on board.
         const placeToken = setInterval( () => {
             dropToken(player1, opponent, setIntervalCounter, placeToken, columnArray)
             setIntervalCounter++
@@ -254,30 +296,7 @@ const play = (columnArray, eventHandler, event, colNumber) => {
         player1.isTurn = false
         opponent.isTurn = true
         message.textContent = "Player-2's turn"
-        if(colNumber === 'column1')
-        {
-            rowPlayedColumn1++
-        }
-        else if(colNumber === 'column2')
-        {
-            rowPlayedColumn2++
-        }
-        else if(colNumber === 'column3')
-        {
-            rowPlayedColumn3++
-        }
-        else if(colNumber === 'column4')
-        {
-            rowPlayedColumn4++
-        }
-        else if(colNumber === 'column5')
-        {
-            rowPlayedColumn5++
-        }
-        else if(colNumber === 'column6')
-        {
-            rowPlayedColumn6++
-        }
+        checksRowsPlayedInColumn(colNumber)
     }
     else if(opponent.isTurn) 
     {
@@ -289,64 +308,17 @@ const play = (columnArray, eventHandler, event, colNumber) => {
         opponent.isTurn = false
         player1.isTurn = true
         message.textContent = "Player-1's turn"
-        if(colNumber === 'column1')
-        {
-            rowPlayedColumn1++
-        }
-        else if(colNumber === 'column2')
-        {
-            rowPlayedColumn2++
-        }
-        else if(colNumber === 'column3')
-        {
-            rowPlayedColumn3++
-        }
-        else if(colNumber === 'column4')
-        {
-            rowPlayedColumn4++
-        }
-        else if(colNumber === 'column5')
-        {
-            rowPlayedColumn5++
-        }
-        else if(colNumber === 'column6')
-        {
-            rowPlayedColumn6++
-        }
-        
+        checksRowsPlayedInColumn(colNumber)
     }
     
     // If rowPlayedColumn# is 5, then remove the event listener from the column so it won't able to be clicked by a player
-    if(rowPlayedColumn1 === 5 && colNumber === 'column1')
-    {
-        event.target.removeEventListener('click', eventHandler)
-    }
-    if(rowPlayedColumn2 === 5 && colNumber === 'column2')
-    {
-        event.target.removeEventListener('click', eventHandler)
-    }
-    if(rowPlayedColumn3 === 5 && colNumber === 'column3')
-    {
-        event.target.removeEventListener('click', eventHandler)
-    }
-    if(rowPlayedColumn4 === 5 && colNumber === 'column4')
-    {
-        event.target.removeEventListener('click', eventHandler)
-    }
-    if(rowPlayedColumn5 === 5 && colNumber === 'column5')
-    {
-        event.target.removeEventListener('click', eventHandler)
-    }
-    if(rowPlayedColumn6 === 5 && colNumber === 'column6')
-    {
-        event.target.removeEventListener('click', eventHandler)
-    }
-    // console.log('row played: ', rowPlayedColumn1, 'column played:', columnArray)
-    // console.log('row played: ', rowPlayedColumn2, 'column played:', columnArray)
-    // console.log('row played: ', rowPlayedColumn3, 'column played:', columnArray)
-    // console.log('row played: ', rowPlayedColumn4, 'column played:', columnArray)
-    // console.log('row played: ', rowPlayedColumn5, 'column played:', columnArray)
-    // console.log('row played: ', rowPlayedColumn6, 'column played:', columnArray)
+    removeColumnEventListener(colNumber, event, eventHandler)
+    console.log('row played: ', rowsPlayedColumn1, 'column played:', columnArray)
+    console.log('row played: ', rowsPlayedColumn2, 'column played:', columnArray)
+    console.log('row played: ', rowsPlayedColumn3, 'column played:', columnArray)
+    console.log('row played: ', rowsPlayedColumn4, 'column played:', columnArray)
+    console.log('row played: ', rowsPlayedColumn5, 'column played:', columnArray)
+    console.log('row played: ', rowsPlayedColumn6, 'column played:', columnArray)
 }
 
 /*
@@ -358,21 +330,33 @@ const computerMove = () => {
     let setIntervalCounter = 0
     const allColumns = [column1, column2, column3, column4, column5, column6]
     let compChoice = Math.floor(Math.random() * allColumns.length)
-    // console.log(allColumns[compChoice])
+    let colNumber = `column${compChoice + 1}`
+    console.log(colNumber)
     const placeToken = setInterval( () => {
         dropToken(opponent, player1, setIntervalCounter, placeToken, allColumns[compChoice])
         setIntervalCounter++ 
     }, 400)
-
     message.textContent = "Player-1's turn"
+    console.log(`Computer: `, colNumber)
+    checksRowsPlayedInColumn(colNumber)
+    if(rowsPlayedColumn1 === 5)
+    {
+
+    }
+    console.log('row played: ', rowsPlayedColumn1, 'column played:', allColumns[compChoice])
+    console.log('row played: ', rowsPlayedColumn2, 'column played:', allColumns[compChoice])
+    console.log('row played: ', rowsPlayedColumn3, 'column played:', allColumns[compChoice])
+    console.log('row played: ', rowsPlayedColumn4, 'column played:', allColumns[compChoice])
+    console.log('row played: ', rowsPlayedColumn5, 'column played:', allColumns[compChoice])
+    console.log('row played: ', rowsPlayedColumn6, 'column played:', allColumns[compChoice])
 }
 
 /*
    Function to play versus the computer
-   parameter1 - column: array of indixes for each column in the grid.
+   parameter1 - column: array of indices for each column in the grid.
    return - no value returned
 */
-const playComputer = (columnArray) => {
+const playComputer = (columnArray, eventHandler, event, colNumber) => {
     let setIntervalCounter = 0 //keeps track of setInterval to clear it at i = 5, meaning column is full.
 
     // Will drop the token into new position every 4 seconds until its reaches its optimal position.
@@ -380,13 +364,26 @@ const playComputer = (columnArray) => {
         dropToken(player1, opponent, setIntervalCounter, placeToken, columnArray)
         setIntervalCounter++
     }, 400)
+    console.log('token dropped - Red')
+    message.textContent = "Computer's turn"
+    console.log(`Player 1 column: `, colNumber)
+    checksRowsPlayedInColumn(colNumber)
+    setTimeout(computerMove, 2000)
+    console.log('token dropped - Yellow')
 
-        message.textContent = "Computer's turn"
-        checksRowsPlayedInColumn()
-        setTimeout(computerMove, 2000)
+    message.textContent = "Player-1's turn"
+    // If rowPlayedColumn# is 5, then remove the event listener from the column so it won't able to be clicked by a player
+    removeColumnEventListener(colNumber, event, eventHandler)
+    console.log('row played: ', rowsPlayedColumn1, 'column played:', columnArray)
+    console.log('row played: ', rowsPlayedColumn2, 'column played:', columnArray)
+    console.log('row played: ', rowsPlayedColumn3, 'column played:', columnArray)
+    console.log('row played: ', rowsPlayedColumn4, 'column played:', columnArray)
+    console.log('row played: ', rowsPlayedColumn5, 'column played:', columnArray)
+    console.log('row played: ', rowsPlayedColumn6, 'column played:', columnArray)
 }
 
-// A play() function for each event handler for each column
+// A play() or playComputer() function for each event handler for each
+// column depending if computer or multiplayer is chosen
 const column1EventHandler = (event) => {
     // console.log(column1EventHandler)
     if(opponent.name === 'Computer')
@@ -479,6 +476,7 @@ multiplayer.addEventListener('click', () => {
     opponent = new Player('Player-2', 'yellow', false)
     console.log(opponent)
     resetGame()
+    //Displays scoreboard
     player1Paragraph.style.display = 'inline-block'
     player1Score.style.display = 'inline'
     opponentParagraph.style.display = 'inline-block'
@@ -492,9 +490,10 @@ computer.addEventListener('click', () => {
     opponent = new Player('Computer', 'yellow', false)
     console.log(opponent)
     resetGame()
+    //Displays scoreboard
     player1Paragraph.style.display = 'inline-block'
     player1Score.style.display = 'inline'
     opponentParagraph.style.display = 'inline-block'
     player2Score.style.display = 'inline'
-    opponentParagraph.textContent = 'Computer: '
+    opponentParagraph.innerHTML = '<i class="fa-solid fa-robot"></i>:'
 })
