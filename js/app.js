@@ -54,7 +54,6 @@ for(let i = 0; i < 30; i++)
     const squareDiv = document.createElement('div')
     squareDiv.id = i
     squareDiv.classList.add('color', 'white')
-    squareDiv.textContent = i 
     boardGame.appendChild(squareDiv)
 }
 
