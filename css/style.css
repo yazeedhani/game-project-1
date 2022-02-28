@@ -7,6 +7,10 @@ h1 {
     margin: 30px 30px;
 }
 
+#playInstructions {
+    margin-left: 22px;
+}
+
 #container {
     display: flex;
     flex-direction: row;
@@ -16,12 +20,12 @@ h1 {
     display: grid;
     grid-template-columns: auto auto auto auto auto auto;
     background-color: #0384fc;
-    /* background-color: black; */
     border-radius: 10%;
     width: 46%;
-    /* height: 40%; */
     margin: 70px 190px;
 }
+
+
 
 aside {
     margin: 60px 20px;
@@ -61,13 +65,14 @@ aside {
     width: 9%;
     margin: 40px auto;
     font-size: 20px;
+    visibility: hidden;
 }
 
 .color {
     background-color: whitesmoke;
     border: 1px solid rgba(0, 0, 0, 0.8);
     padding: 20px;
-    margin: 5px;
+    margin: 5px 5px 5px 9px;
     font-size: 30px;
     text-align: center;
     width: 80px;
