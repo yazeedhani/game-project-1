@@ -34,6 +34,7 @@ let rowsPlayedColumn4 = 0
 let rowsPlayedColumn5 = 0
 let rowsPlayedColumn6 = 0
 
+//To track if player one is the winner so computerMove() can terminate execution
 let player1Winner = false
 
 // Class to build player objects
