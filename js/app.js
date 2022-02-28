@@ -1,4 +1,3 @@
-console.log('Linked.')
 /************* GLOBAL VARIABLES *************/
 const resetButton = document.getElementById('resetGame')
 const newGameButton = document.getElementById('newGame')
@@ -160,10 +159,10 @@ const checkWinner = (winningCombinations, player) => {
             {
                 player2Score.textContent = player.score
             }
-            console.log(document.getElementById(`${winningCombinations[i][0]}`))
-            console.log(document.getElementById(`${winningCombinations[i][1]}`))
-            console.log(document.getElementById(`${winningCombinations[i][2]}`))
-            console.log(document.getElementById(`${winningCombinations[i][3]}`))
+            // console.log(document.getElementById(`${winningCombinations[i][0]}`))
+            // console.log(document.getElementById(`${winningCombinations[i][1]}`))
+            // console.log(document.getElementById(`${winningCombinations[i][2]}`))
+            // console.log(document.getElementById(`${winningCombinations[i][3]}`))
             player.isTurn = false
             opponent.isTurn = false
             removeListeners()
@@ -186,7 +185,7 @@ const dropToken = (player1, opponent, i, placeToken, columnArray) => {
     if(i === 5)
     {
         clearInterval(placeToken)
-        console.log('checking winner')
+        // console.log('checking winner')
         checkWinner(winningCombinations, player1) // will calculate the winner once the token reaches the last emtpy circle
     }
     //checks the first circle(row) in the current column
@@ -296,7 +295,7 @@ const play = (columnArray, eventHandler, event, colNumber) => {
             dropToken(player1, opponent, setIntervalCounter, placeToken, columnArray)
             setIntervalCounter++
         }, 100)
-        console.log('token dropped - Red')
+        // console.log('token dropped - Red')
         player1.isTurn = false
         opponent.isTurn = true
         message.textContent = "Player-2's turn"
@@ -308,7 +307,7 @@ const play = (columnArray, eventHandler, event, colNumber) => {
             dropToken(opponent, player1, setIntervalCounter, placeToken, columnArray)
             setIntervalCounter++ 
         }, 100)
-        console.log('token dropped - Yellow')
+        // console.log('token dropped - Yellow')
         opponent.isTurn = false
         player1.isTurn = true
         message.textContent = "Player-1's turn"
@@ -317,12 +316,12 @@ const play = (columnArray, eventHandler, event, colNumber) => {
     
     // If rowPlayedColumn# is 5, then remove the event listener from the column so it won't able to be clicked by a player
     removeColumnEventListener(colNumber, event, eventHandler)
-    console.log('row played: ', rowsPlayedColumn1, 'column played:', columnArray)
-    console.log('row played: ', rowsPlayedColumn2, 'column played:', columnArray)
-    console.log('row played: ', rowsPlayedColumn3, 'column played:', columnArray)
-    console.log('row played: ', rowsPlayedColumn4, 'column played:', columnArray)
-    console.log('row played: ', rowsPlayedColumn5, 'column played:', columnArray)
-    console.log('row played: ', rowsPlayedColumn6, 'column played:', columnArray)
+    // console.log('row played: ', rowsPlayedColumn1, 'column played:', columnArray)
+    // console.log('row played: ', rowsPlayedColumn2, 'column played:', columnArray)
+    // console.log('row played: ', rowsPlayedColumn3, 'column played:', columnArray)
+    // console.log('row played: ', rowsPlayedColumn4, 'column played:', columnArray)
+    // console.log('row played: ', rowsPlayedColumn5, 'column played:', columnArray)
+    // console.log('row played: ', rowsPlayedColumn6, 'column played:', columnArray)
 }
 
 /*
@@ -331,28 +330,30 @@ const play = (columnArray, eventHandler, event, colNumber) => {
    return - only return to terminate function execution if player1Winner is true
 */
 const computerMove = () => {
-    console.log(player1Winner)
+    // console.log(player1Winner)
+    // if player1 wins from previous turn, then terminate this function
     if(player1Winner)
     {
         return
     }
     let setIntervalCounter = 0
+    // Randomly choose a column to insert token in
     const allColumns = [column1, column2, column3, column4, column5, column6]
     let compChoice = Math.floor(Math.random() * allColumns.length)
     let colNumber = `column${compChoice + 1}`
-    console.log('Computer column: ', colNumber)
-    console.log('token dropped - Yellow')
+    // console.log('Computer column: ', colNumber)
+    // console.log('token dropped - Yellow')
     const placeToken = setInterval( () => {
         dropToken(opponent, player1, setIntervalCounter, placeToken, allColumns[compChoice])
         setIntervalCounter++ 
     }, 100)
     checksRowsPlayedInColumn(colNumber)
-    console.log('row played 1: ', rowsPlayedColumn1, 'column played:', allColumns[compChoice])
-    console.log('row played 2: ', rowsPlayedColumn2, 'column played:', allColumns[compChoice])
-    console.log('row played 3: ', rowsPlayedColumn3, 'column played:', allColumns[compChoice])
-    console.log('row played 4: ', rowsPlayedColumn4, 'column played:', allColumns[compChoice])
-    console.log('row played 5: ', rowsPlayedColumn5, 'column played:', allColumns[compChoice])
-    console.log('row played 6: ', rowsPlayedColumn6, 'column played:', allColumns[compChoice])
+    // console.log('row played 1: ', rowsPlayedColumn1, 'column played:', allColumns[compChoice])
+    // console.log('row played 2: ', rowsPlayedColumn2, 'column played:', allColumns[compChoice])
+    // console.log('row played 3: ', rowsPlayedColumn3, 'column played:', allColumns[compChoice])
+    // console.log('row played 4: ', rowsPlayedColumn4, 'column played:', allColumns[compChoice])
+    // console.log('row played 5: ', rowsPlayedColumn5, 'column played:', allColumns[compChoice])
+    // console.log('row played 6: ', rowsPlayedColumn6, 'column played:', allColumns[compChoice])
 }
 
 /*
@@ -361,7 +362,7 @@ const computerMove = () => {
    return - no value returned
 */
 const playComputer = (columnArray, eventHandler, event, colNumber) => {
-    console.log(player1Winner)
+    // console.log(player1Winner)
     let setIntervalCounter = 0 //keeps track of setInterval to clear it at i = 5, meaning column is full.
 
     // Will drop the token into new position every 1 millisecond until its reaches its optimal position.
@@ -369,24 +370,26 @@ const playComputer = (columnArray, eventHandler, event, colNumber) => {
         dropToken(player1, opponent, setIntervalCounter, placeToken, columnArray)
         setIntervalCounter++
     }, 100)
-    console.log('token dropped - Red')
-    console.log(`Player 1 column: `, colNumber)
+    // console.log('token dropped - Red')
+    // console.log(`Player 1 column: `, colNumber)
     checksRowsPlayedInColumn(colNumber)
     
     message.textContent = "Player-1's turn"
     // If rowPlayedColumn# is 5, then remove the event listener from the column so it won't able to be clicked by a player
     removeColumnEventListener(colNumber, event, eventHandler)
-    console.log('row played 1: ', rowsPlayedColumn1, 'column played:', columnArray)
-    console.log('row played 2: ', rowsPlayedColumn2, 'column played:', columnArray)
-    console.log('row played 3: ', rowsPlayedColumn3, 'column played:', columnArray)
-    console.log('row played 4: ', rowsPlayedColumn4, 'column played:', columnArray)
-    console.log('row played 5: ', rowsPlayedColumn5, 'column played:', columnArray)
-    console.log('row played 6: ', rowsPlayedColumn6, 'column played:', columnArray)
-    setTimeout(computerMove, 1000)
+    // console.log('row played 1: ', rowsPlayedColumn1, 'column played:', columnArray)
+    // console.log('row played 2: ', rowsPlayedColumn2, 'column played:', columnArray)
+    // console.log('row played 3: ', rowsPlayedColumn3, 'column played:', columnArray)
+    // console.log('row played 4: ', rowsPlayedColumn4, 'column played:', columnArray)
+    // console.log('row played 5: ', rowsPlayedColumn5, 'column played:', columnArray)
+    // console.log('row played 6: ', rowsPlayedColumn6, 'column played:', columnArray)
+    setTimeout(computerMove, 1000) // The computer's turn to drop a token
 }
 
 // A play() or playComputer() function for each event handler for each
 // column depending if computer or multiplayer is chosen
+// playComputer() will be used if computer mode is selected
+// play() will be used if multiplayer mode is selected
 const column1EventHandler = (event) => {
     // console.log(column1EventHandler)
     if(opponent.name === 'Computer')
@@ -474,10 +477,10 @@ resetButton.addEventListener('click', resetGame)
 // New game
 newGameButton.addEventListener('click', newGame)
 
-// Multiplayer mode
+// Multiplayer mode selected
 multiplayer.addEventListener('click', () => {
     opponent = new Player('Player-2', 'yellow', false)
-    console.log(opponent)
+    // console.log(opponent)
     resetGame()
     //Displays scoreboard
     player1Paragraph.style.display = 'inline-block'
@@ -488,10 +491,10 @@ multiplayer.addEventListener('click', () => {
     message.style.visibility = 'visible'
 })
 
-// Computer mode
+// Computer mode selected
 computer.addEventListener('click', () => {
     opponent = new Player('Computer', 'yellow', false)
-    console.log(opponent)
+    // console.log(opponent)
     resetGame()
     //Displays scoreboard
     player1Paragraph.style.display = 'inline-block'
