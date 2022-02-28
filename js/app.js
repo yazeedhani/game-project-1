@@ -345,7 +345,6 @@ const computerMove = () => {
         dropToken(opponent, player1, setIntervalCounter, placeToken, allColumns[compChoice])
         setIntervalCounter++ 
     }, 400)
-    message.textContent = "Player-1's turn"
     checksRowsPlayedInColumn(colNumber)
     console.log('row played 1: ', rowsPlayedColumn1, 'column played:', allColumns[compChoice])
     console.log('row played 2: ', rowsPlayedColumn2, 'column played:', allColumns[compChoice])
@@ -370,7 +369,6 @@ const playComputer = (columnArray, eventHandler, event, colNumber) => {
         setIntervalCounter++
     }, 400)
     console.log('token dropped - Red')
-    message.textContent = "Computer's turn"
     console.log(`Player 1 column: `, colNumber)
     checksRowsPlayedInColumn(colNumber)
     
@@ -501,5 +499,5 @@ computer.addEventListener('click', () => {
     opponentParagraph.style.display = 'inline-block'
     player2Score.style.display = 'inline'
     opponentParagraph.innerHTML = '<i class="fa-solid fa-robot"></i>:'
-    message.style.visibility = 'visible'
+    message.style.visibility = 'hidden'
 })
